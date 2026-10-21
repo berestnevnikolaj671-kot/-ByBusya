@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="ВебСторс">
+    <meta name="theme-color" content="#1a73e8">
+    <title>ВебСторс - Каталог приложений</title>
+    
+    <style>
+        /* Базовые переменные и сброс */
+        :root {
+            --primary: #1a73e8;
+            --primary-hover: #1557b0;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-main: #202124;
+            --text-muted: #5f6368;
+            --border-color: #e0e0e0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Шапка */
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        header svg { width: 28px; height: 28px; fill: white; }
+        header h1 { margin: 0; font-size: 20px; font-weight: 500; }
+        .device-badge {
+            margin-left: auto;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 12px;
+            white-space: nowrap;
+        }
+
+        /* Основной контейнер */
+        main {
+            flex-grow: 1;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 24px 16px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Поиск */
+        .search-container {
+            margin-bottom: 32px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 16px 20px 16px 52px;
+            font-size: 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            box-sizing: border-box;
+            background-color: var(--card-bg);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            transition: 0.2s;
+            outline: none;
+        }
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.15);
+        }
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            fill: var(--text-muted);
+        }
+
+        /* Инструкция */
+        .instruction-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 32px;
+            display: flex;
+            gap: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .instruction-icon {
+            background-color: #e8f0fe;
+            color: var(--primary);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .instruction-icon svg { width: 24px; height: 24px; fill: currentColor; }
+        .instruction-content h2 { margin: 0 0 12px 0; font-size: 18px; font-weight: 600; }
+        .instruction-content p, .instruction-content ol { margin: 0 0 8px 0; color: var(--text-muted); line-height: 1.5; font-size: 14.5px; }
+        .instruction-content ol { padding-left: 20px; }
+        .share-icon-inline {
+            display: inline-flex; align-items: center; justify-content: center;
+            background-color: #f1f3f4; border: 1px solid #dadce0; border-radius: 4px;
+            padding: 2px 6px; margin: 0 4px;
+        }
+
+        /* Преимущества и Методология */
+        .section-heading {
+            font-size: 20px; font-weight: 600; margin: 0 0 16px 0; color: var(--text-main); text-align: center;
+        }
+        .advantages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .advantage-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .advantage-illust {
+            width: 64px; height: 64px;
+            border-radius: 16px;
+            background-color: #f1f3f4;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 14px;
+            flex-shrink: 0;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        .advantage-illust svg { width: 42px; height: 42px; }
+        .advantage-text {
+            margin: 0; font-size: 14px; font-weight: 600; line-height: 1.4; color: var(--text-main);
+        }
+
+        .methodology-card {
+            background-color: #e8f0fe;
+            border: 1px solid #d2e3fc;
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin-bottom: 32px;
+            color: #174ea6;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .methodology-card h3 {
+            margin: 0 0 10px 0; font-size: 16px; font-weight: 600; color: #1a73e8;
+        }
+        .methodology-card p { margin: 0 0 10px 0; }
+        .methodology-card p:last-child { margin-bottom: 0; }
+        .methodology-card a { color: #1a73e8; font-weight: 600; text-decoration: underline; }
+
+        /* Сетка и Категории */
+        .category-section { margin-bottom: 40px; }
+        .category-header {
+            display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px;
+            margin: 0 0 20px 0; padding-bottom: 8px; border-bottom: 2px solid #f1f3f4;
+        }
+        .category-title {
+            font-size: 22px; font-weight: 600; margin: 0; color: #202124;
+        }
+        .category-note {
+            font-size: 13px; color: var(--text-muted); font-style: italic;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 16px;
+        }
+
+        /* Карточка */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            transition: transform 0.2s, box-shadow 0.2s;
+            height: 100%;
+            box-sizing: border-box;
+        }
+        .card:active { transform: scale(0.98); }
+        
+        .app-icon {
+            width: 64px; height: 64px;
+            border-radius: 18px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            flex-shrink: 0;
+        }
+        .app-icon svg { width: 32px; height: 32px; fill: white; }
+        
+        .app-name { font-size: 14px; font-weight: 600; margin: 0 0 4px 0; line-height: 1.3; word-break: break-word; }
+        .app-meta { font-size: 11px; color: var(--text-muted); font-style: italic; margin: 0 0 16px 0; min-height: 14px; }
+        
+        .btn-open {
+            background-color: #e8f0fe; color: var(--primary);
+            padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600;
+            width: 100%; box-sizing: border-box; margin-top: auto;
+        }
+
+        /* Внимание */
+        .warning-banner {
+            background-color: #fdeded; border-left: 6px solid #d32f2f;
+            padding: 24px; border-radius: 0 16px 16px 0; margin: 48px 0;
+        }
+        .warning-banner h2 { color: #d32f2f; margin: 0 0 12px 0; font-size: 20px; }
+        .warning-banner p { color: #5f2120; margin: 0; font-size: 15px; line-height: 1.5; font-weight: 600; }
+
+        /* Футер */
+        footer {
+            background-color: white; border-top: 1px solid var(--border-color);
+            padding: 40px 16px; text-align: center; font-size: 12px; color: var(--text-muted);
+            margin-top: auto;
+        }
+        footer p { margin: 8px 0; line-height: 1.5; }
+        .busya-brand { font-weight: bold; color: var(--text-main); font-size: 14px; margin-top: 20px !important; }
+        
+        /* Кнопки соцсетей Busya (Квадратные, маленькие) */
+        .footer-bottom-row {
+            display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 16px; margin-top: 24px;
+        }
+        .social-buttons {
+            display: flex; justify-content: center; gap: 12px;
+        }
+        .footer-contact-note {
+            max-width: 540px; text-align: left; font-size: 12px; color: var(--text-muted); line-height: 1.4; margin: 0;
+        }
+        .footer-contact-note a {
+            color: var(--primary); text-decoration: none; font-weight: 600;
+        }
+        @media (max-width: 600px) {
+            .footer-contact-note { text-align: center; }
+        }
+        .social-btn {
+            width: 32px; height: 32px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: opacity 0.2s;
+        }
+        .social-btn:active { opacity: 0.7; }
+        .social-btn svg { width: 22px; height: 22px; }
+        .btn-mm { background-color: #0000FF; }
+        .btn-ok { background-color: #FF7700; }
+
+        .no-results { text-align: center; padding: 40px; color: var(--text-muted); display: none; }
+
+        /* Адаптация под ПК, планшеты и смартфоны */
+        body[data-device="desktop"] .grid {
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 18px;
+        }
+
+        body[data-device="tablet"] .grid {
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 14px;
+        }
+
+        @media (max-width: 640px) {
+            header { padding: 12px 16px; }
+            header h1 { font-size: 18px; }
+            main { padding: 16px 10px; }
+            .advantages-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .advantage-card {
+                flex-direction: row;
+                text-align: left;
+                padding: 12px 14px;
+                gap: 12px;
+            }
+            .advantage-illust {
+                width: 48px;
+                height: 48px;
+                margin-bottom: 0;
+            }
+            .advantage-illust svg { width: 32px; height: 32px; }
+            .advantage-text { font-size: 13px; }
+            .methodology-card { padding: 16px; font-size: 13px; }
+            .instruction-card { padding: 16px; gap: 12px; }
+            .instruction-icon { width: 40px; height: 40px; }
+            .category-title { font-size: 19px; }
+            /* Сетка 3 в ряд на телефонах */
+            .grid, body[data-device="mobile"] .grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 10px;
+            }
+            .card {
+                padding: 12px 8px;
+                border-radius: 14px;
+            }
+            .app-icon {
+                width: 48px;
+                height: 48px;
+                border-radius: 14px;
+                margin-bottom: 8px;
+            }
+            .app-icon svg {
+                width: 24px;
+                height: 24px;
+            }
+            .app-name {
+                font-size: 12px;
+                line-height: 1.2;
+                margin-bottom: 2px;
+            }
+            .app-meta {
+                font-size: 9.5px;
+                margin-bottom: 8px;
+                min-height: 11px;
+                line-height: 1.15;
+            }
+            .btn-open {
+                padding: 6px 8px;
+                font-size: 11px;
+                border-radius: 14px;
+            }
+        }
+
+        @media (max-width: 350px) {
+            .grid, body[data-device="mobile"] .grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <svg viewBox="0 0 24 24"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
+        <h1>ВебСторс</h1>
+        <span id="deviceBadge" class="device-badge"></span>
+    </header>
+
+    <main>
+        <!-- 3 преимущества ВебСторса By Busya -->
+        <h2 class="section-heading">3 преимущества ВебСторса By Busya</h2>
+        <div class="advantages-grid">
+            <!-- 1. Зачеркнутая реклама AD -->
+            <div class="advantage-card">
+                <div class="advantage-illust" style="background: #ffebee;">
+                    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="8" y="16" width="48" height="32" rx="6" fill="#ffffff" stroke="#d32f2f" stroke-width="3"/>
+                        <text x="32" y="38" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#202124" text-anchor="middle">AD</text>
+                        <circle cx="32" cy="32" r="26" fill="none" stroke="#d32f2f" stroke-width="5"/>
+                        <line x1="14" y1="50" x2="50" y2="14" stroke="#d32f2f" stroke-width="5" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <p class="advantage-text">Полное отсутствие рекламы</p>
+            </div>
+
+            <!-- 2. Российский флаг -->
+            <div class="advantage-card">
+                <div class="advantage-illust" style="background: #e8f0fe;">
+                    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="6" y="12" width="52" height="40" rx="6" fill="#ffffff" stroke="#dadce0" stroke-width="1"/>
+                        <path d="M6 18 C6 14.6863 8.68629 12 12 12 H52 C55.3137 12 58 14.6863 58 18 V25.33 H6 V18 Z" fill="#ffffff"/>
+                        <rect x="6" y="25.33" width="52" height="13.33" fill="#0039a6"/>
+                        <path d="M6 38.66 H58 V46 C58 49.3137 55.3137 52 52 52 H12 C8.68629 52 6 49.3137 6 46 V38.66 Z" fill="#d52b1e"/>
+                        <rect x="6" y="12" width="52" height="40" rx="6" fill="none" stroke="#cfd8dc" stroke-width="1.5"/>
+                    </svg>
+                </div>
+                <p class="advantage-text">Разработка в России</p>
+            </div>
+
+            <!-- 3. Огромное количество приложений -->
+            <div class="advantage-card">
+                <div class="advantage-illust" style="background: #e6f4ea;">
+                    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="8" y="8" width="13" height="13" rx="3" fill="#1a73e8"/>
+                        <rect x="25.5" y="8" width="13" height="13" rx="3" fill="#34a853"/>
+                        <rect x="43" y="8" width="13" height="13" rx="3" fill="#ea4335"/>
+                        <rect x="8" y="25.5" width="13" height="13" rx="3" fill="#fbbc04"/>
+                        <rect x="25.5" y="25.5" width="13" height="13" rx="3" fill="#9334e6"/>
+                        <rect x="43" y="25.5" width="13" height="13" rx="3" fill="#12b5cb"/>
+                        <rect x="8" y="43" width="13" height="13" rx="3" fill="#fa7b17"/>
+                        <rect x="25.5" y="43" width="13" height="13" rx="3" fill="#3c4043"/>
+                        <rect x="43" y="43" width="13" height="13" rx="3" fill="#1e8e3e"/>
+                    </svg>
+                </div>
+                <p class="advantage-text">Огромное количество удалённых из AppStore российских и иностранных (в РФ) сервисов - популярные и непопулярные</p>
+            </div>
+        </div>
+
+        <!-- Как сервисы попадают в этот список -->
+        <div class="methodology-card">
+            <h3>Как сервисы попадают в этот список:</h3>
+            <p><strong>Этап 1 — поиск.</strong> Ищу информацию вручную и с применением ИИ. <strong>Этап 2 — фильтрация.</strong> Я не доверяю ИИ и новостным порталам на слово, а ЛИЧНО, ВРУЧНУЮ вбиваю название сервиса в AppStore и проверяю правда ли его там нет или его не удаляли/он вернулся. <strong>Этап 3 — ручной поиск ссылок.</strong> Во избежания ИИ фейков/ошибок нахожу ссылки вручную.</p>
+            <p>Этот список на 99.9% точный, но вы можете сделать его ещё точнее! Напишите мне на почту <a href="mailto:berestnevnikolaj671@gmail.com">berestnevnikolaj671@gmail.com</a> если увидели, то что сервис занесён сюда по ошибке, или хотите предложить новый сервис в список.</p>
+        </div>
+
+        <!-- Поиск -->
+        <div class="search-container">
+            <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            <input type="text" id="searchInput" class="search-input" placeholder="Поиск приложений (Сбер, VK, Инвестиции, Авиа, ТВ)...">
+        </div>
+
+        <div class="instruction-card">
+            <div class="instruction-icon">
+                <svg viewBox="0 0 24 24"><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/></svg>
+            </div>
+            <div class="instruction-content">
+                <h2>Как установить приложение на iOS</h2>
+                <ol>
+                    <li>Откройте сайт в <strong>Safari</strong>.</li>
+                    <li>Нажмите кнопку <strong>Поделиться</strong> <span class="share-icon-inline"><svg style="width:14px;height:14px;fill:#1a73e8" viewBox="0 0 24 24"><path d="M16 5l-1.42 1.42-1.59-1.59V16h-2V4.83L9.41 6.41 8 5l4-4 4 4zm4 5v11c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2V10c0-1.1.9-2 2-2h3v2H6v11h12V10h-3V8h3c1.1 0 2 .9 2 2z"/></svg></span>.</li>
+                    <li>Выберите <strong>Добавить на экран «Домой»</strong>.</li>
+                    <li>При желании измените имя и значок.</li>
+                    <li>Нажмите <strong>Добавить</strong>.</li>
+                </ol>
+                <p>Для Firefox/Brave или другого браузера инструкция незначительно отличается.</p>
+            </div>
+        </div>
+
+        <div id="noResults" class="no-results">По вашему запросу ничего не найдено.</div>
+        <div id="catalogContainer"></div>
+
+        <div class="warning-banner">
+            <h2>⚠️ ВНИМАНИЕ!</h2>
+            <p>На фоне санкций Европейского Союза и Соединённых Штатов Америки против многих российских сервисов у некоторых сайтов отзывают сертификаты о безопасном соединении. Из-за этого многие браузеры на некоторые сайты российских сервисов могут "ругаться" из-за небезопасного соединения. Мой сайт не публикует мошеннические, фальшивые или фишинговые ссылки, так что это не моя вина. Открывать такой сайт или нет — полностью ВАШ выбор ⚠️</p>
+        </div>
+    </main>
+
+    <footer>
+        <p>Данный сайт не защищён авторским правом. Копирование и использование материалов сайта возможно без письменного согласия</p>
+        <p><em>Отказ от ответственности: Данный сайт является независимым информационным каталогом. Все упомянутые товарные знаки и названия брендов принадлежат их соответствующим правообладателям.</em></p>
+        <p class="busya-brand">Busya™️ - protect your privacy</p>
+        <p>No ads. No tracers. No cookie. By Busya™️.</p>
+        <p style="margin-top: 16px; border-top: 1px solid var(--border-color); padding-top: 16px;">Данный сайт подчиняется законам Российской Федерации.</p>
+        
+        <div class="footer-bottom-row">
+            <div class="social-buttons">
+                <a href="https://m.my.mail.ru/mail/kolyaberestnevgmail.com/multipost?postid=50000000C9DA8800&back=%2Fmail%2Fkolyaberestnevgmail.com%2F" class="social-btn btn-mm" target="_blank" rel="noopener noreferrer" title="Мой Мир">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="35" cy="35" r="5" fill="white" />
+                        <circle cx="65" cy="35" r="5" fill="white" />
+                        <path d="M 25 55 Q 50 70 75 55" fill="none" stroke="white" stroke-width="8" stroke-linecap="round" />
+                    </svg>
+                </a>
+                <a href="https://ok.ru/profile/910122221595" class="social-btn btn-ok" target="_blank" rel="noopener noreferrer" title="Одноклассники">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="35" r="15" fill="none" stroke="white" stroke-width="8" />
+                        <path d="M 20 60 Q 50 70 80 60" fill="none" stroke="white" stroke-width="8" stroke-linecap="round" />
+                        <path d="M 40 65 L 25 85" stroke="white" stroke-width="8" stroke-linecap="round" />
+                        <path d="M 60 65 L 75 85" stroke="white" stroke-width="8" stroke-linecap="round" />
+                    </svg>
+                </a>
+            </div>
+            <p class="footer-contact-note">
+                Нашли сервис, который внесён сюда по ошибке? Хотите предложить новый сервис? Являетесь правообладателем ресурса? Пишите на почту <a href="mailto:berestnevnikolaj671@gmail.com">berestnevnikolaj671@gmail.com</a>.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Определение типа устройства (ПК, планшет или смартфон)
+        function detectAndAdaptDevice() {
+            const ua = navigator.userAgent.toLowerCase();
+            const width = window.innerWidth;
+            const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+            let deviceType = 'desktop';
+            let badgeText = 'ПК-версия';
+
+            if (/ipad|tablet|playbook|silk/.test(ua) || (isTouch && width >= 641 && width <= 1180)) {
+                deviceType = 'tablet';
+                badgeText = 'Планшет';
+            } else if (/iphone|ipod|android.*mobile|windows phone|blackberry|bb10|mini/.test(ua) || width <= 640) {
+                deviceType = 'mobile';
+                badgeText = 'Смартфон';
+            }
+
+            document.body.setAttribute('data-device', deviceType);
+            const badge = document.getElementById('deviceBadge');
+            if (badge) {
+                badge.textContent = badgeText;
+            }
+        }
+
+        window.addEventListener('resize', detectAndAdaptDevice);
+        detectAndAdaptDevice();
+
+        // Векторные SVG иконки (локальные, без API)
+        const icons = {
+            bank: '<path d="M12 3L1 9h4v8H3v2h18v-2h-2V9h4L12 3zm-3 8h2v8H9v-8zm4 0h2v8h-2v-8z"/>',
+            invest: '<path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99l1.5 1.5z"/>',
+            video: '<path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>',
+            social: '<path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>',
+            mail: '<path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"/>',
+            cloud: '<path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/>',
+            shop: '<path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>',
+            music: '<path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>',
+            map: '<path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>',
+            search: '<path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>',
+            ai: '<path d="M19 3l-1.25 2.75L15 7l2.75 1.25L19 11l1.25-2.75L23 7l-2.75-1.25L19 3zm-7.5 1.5L9 10 3.5 12.5 9 15l2.5 5.5L14 15l5.5-2.5L14 10l-2.5-5.5zM19 13l-1.25 2.75L15 17l2.75 1.25L19 21l1.25-2.75L23 17l-2.75-1.25L19 13z"/>',
+            edu: '<path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>',
+            game: '<path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>',
+            furniture: '<path d="M20 10V7c0-1.1-.9-2-2-2H6c-1.1 0-2 .9-2 2v3c-1.1 0-2 .9-2 2v5h1.33L4 19h1l.67-2h12.67l.66 2h1l.67-2H22v-5c0-1.1-.9-2-2-2zm-2-3v3H6V7h12zM4 15v-3h16v3H4z"/>',
+            fastfood: '<path d="M18.06 22.99h1.66c.84 0 1.53-.64 1.63-1.46L23 5.05h-5V1h-1.97v4.05h-4.97l.3 2.34c1.71.47 3.31 1.32 4.27 2.26 1.44 1.42 2.43 2.89 2.43 5.29v8.05zM1 21.99V21h15.03v.99c0 .55-.45 1-1.01 1H2.01c-.56 0-1.01-.45-1.01-1zm15.03-7c0-8-15.03-8-15.03 0h15.03zM1.02 17h15v2h-15v-2z"/>',
+            coffee: '<path d="M18.5 3H6c-1.1 0-2 .9-2 2v5.71c0 3.83 2.95 7.18 6.78 7.29 3.96.12 7.22-3.06 7.22-7v-1h.5c1.93 0 3.5-1.57 3.5-3.5S20.43 3 18.5 3zM16 10c0 2.76-2.24 5-5 5s-5-2.24-5-5V5h10v5zm2.5-2H18V5h.5c.83 0 1.5.67 1.5 1.5S19.33 8 18.5 8zM4 19h16v2H4v-2z"/>',
+            can: '<path d="M17 2H7v2l1 1.5V20c0 1.1.9 2 2 2h4c1.1 0 2-.9 2-2V5.5L17 4V2zm-7 2h4v1h-4V4zm4 16h-4v-5.5c1.2.6 2.8.6 4 0V20zm0-7.5c-1.2.8-2.8.8-4 0V7h4v5.5z"/>',
+            chat: '<path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM7 9h2v2H7V9zm4 0h2v2h-2V9zm4 0h2v2h-2V9z"/>',
+            ticket: '<path d="M22 10V6c0-1.1-.9-2-2-2H4c-1.1 0-1.99.9-1.99 2v4c1.1 0 1.99.9 1.99 2s-.89 2-2 2v4c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-4c-1.1 0-2-.9-2-2s.9-2 2-2zm-2-1.46c-1.19.69-2 1.99-2 3.46s.81 2.77 2 3.46V18H4v-2.54c1.19-.69 2-1.99 2-3.46s-.81-2.77-2-3.46V6h16v2.54z"/>',
+            sport: '<path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/>',
+            car: '<path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/>',
+            plane: '<path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>',
+            news: '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>',
+            radio: '<path d="M3.24 6.15C2.51 6.43 2 7.17 2 8v12c0 1.1.89 2 2 2h16c1.11 0 2-.9 2-2V8c0-1.11-.89-2-2-2H8.3l8.26-3.34L15.88 1 3.24 6.15zM7 20c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm13-8h-2v-2h-2v2H4V8h16v4z"/>',
+            health: '<path d="M19 3H5c-1.1 0-1.99.9-1.99 2L3 19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 11h-4v4h-4v-4H6v-4h4V6h4v4h4v4z"/>',
+            shield: '<path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>'
+        };
+
+        const gradients = {
+            blue: "linear-gradient(135deg, #4285f4, #1a73e8)",
+            green: "linear-gradient(135deg, #34a853, #1e8e3e)",
+            red: "linear-gradient(135deg, #ea4335, #d93025)",
+            yellow: "linear-gradient(135deg, #fbbc04, #f9ab00)",
+            orange: "linear-gradient(135deg, #fa7b17, #e65100)",
+            purple: "linear-gradient(135deg, #9334e6, #7b1fa2)",
+            dark: "linear-gradient(135deg, #3c4043, #202124)",
+            cyan: "linear-gradient(135deg, #12b5cb, #00838f)"
+        };
+
+        const categoriesConfig = [
+            { id: 'popular', title: 'Популярные' },
+            { id: 'banks', title: 'Банки' },
+            { id: 'business', title: 'Бизнес' },
+            { id: 'invest', title: 'Инвестиции' },
+            { id: 'insurance', title: 'Страхование' },
+            { id: 'social_nets', title: 'Соцсети' },
+            { id: 'shopping', title: 'Покупки' },
+            { id: 'games', title: 'Игры' },
+            { id: 'sber', title: 'Продукты от Сбера' },
+            { id: 'vk', title: 'Продукты от VK' },
+            { id: 'gazprom', title: 'Продукты Газпрома' },
+            { id: 'vgtrk', title: 'Продукты от ВГТРК', note: 'Карусель ТВ является совместным проектом ВГТРК и Первого канала' },
+            { id: 'dating', title: 'Знакомства' },
+            { id: 'travel', title: 'Путешествия' },
+            { id: 'media', title: 'СМИ' },
+            { id: 'radio', title: 'Радио' },
+            { id: 'media_en', title: 'СМИ на английском' },
+            { id: 'other', title: 'Остальные' },
+            { id: 'foreign', title: 'Иностранные сервисы' }
+        ];
+
+        const appsData = [
+            // МУЛЬТИ-ЭКОСИСТЕМНЫЕ / ПОПУЛЯРНЫЕ / СОЦСЕТИ
+            { name: "ВКонтакте", link: "https://vk.ru", icon: "social", color: gradients.blue, cats: ["popular", "vk", "social_nets"] },
+            { name: "СберБанк", link: "https://online.sberbank.ru/CSAFront/index.do", icon: "bank", color: gradients.green, cats: ["popular", "banks", "sber"] },
+            { name: "MAX", link: "https://web.max.ru/", icon: "chat", color: gradients.purple, cats: ["popular", "vk"] },
+            { name: "Почта mail.ru", link: "https://mail.ru", icon: "mail", color: gradients.blue, cats: ["popular", "vk"] },
+            { name: "Одноклассники", link: "https://ok.ru", icon: "social", color: gradients.orange, cats: ["popular", "vk", "social_nets"] },
+            { name: "Базар (соцсеть про финансы)", link: "https://finbazar.ru/", icon: "social", color: gradients.orange, cats: ["social_nets", "invest"] },
+
+            // ИНВЕСТИЦИИ
+            { name: "Т-Инвестиции", link: "https://www.tbank.ru/invest/", icon: "invest", color: gradients.yellow, cats: ["invest"] },
+            { name: "Сбер Инвестиции", link: "https://www.sberbank.ru/ru/person/investments", icon: "invest", color: gradients.green, cats: ["invest", "sber"] },
+            { name: "Альфа Инвестиции", link: "https://lk.alfadirect.ru/", icon: "invest", color: gradients.red, cats: ["invest"] },
+            { name: "ГПБ Брокер", link: "https://www.gazprombank.ru/personal/page/brokerage-service/", icon: "invest", color: gradients.blue, cats: ["invest", "gazprom"] },
+            { name: "Газпромбанк Бизнес", link: "https://passport.gbo.gazprombank.ru/", icon: "invest", color: gradients.blue, cats: ["invest", "banks", "gazprom", "business"] },
+            { name: "ВТБ Инвестиции", link: "https://invest.vtb.ru/mob/WebApp/Login", icon: "invest", color: gradients.blue, cats: ["invest"] },
+            { name: "ВТБ Мои Инвестиции", link: "https://invest.vtb.ru/mob/WebApp/Login", icon: "invest", color: gradients.blue, cats: ["invest"] },
+            { name: "ВТБ Пенсионный фонд", link: "https://www.vtbnpf.ru/", icon: "shield", color: gradients.blue, cats: ["invest"] },
+            { name: "ВТБ Регистратор", link: "https://www.vtbreg.ru/", icon: "invest", color: gradients.blue, cats: ["invest", "business"] },
+            { name: "Альфа-Капитал", link: "https://www.alfacapital.ru/", icon: "invest", color: gradients.red, cats: ["invest"] },
+            { name: "ПСБ Инвестиции", link: "https://www.upravlyaem.ru/", icon: "invest", color: gradients.blue, cats: ["invest"] },
+            { name: "Совкомбанк Инвестиции", link: "https://invest.sovcombank.ru/", icon: "invest", color: gradients.blue, cats: ["invest"] },
+            { name: "Открытие Инвестиции", link: "https://www.open-am.ru/", icon: "invest", color: gradients.cyan, cats: ["invest"] },
+            { name: "РСХБ Брокер", link: "https://www.rshb.ru/natural/brokerage", icon: "invest", color: gradients.green, cats: ["invest"] },
+            { name: "Уралсиб Инвестиции", link: "https://uralsib.ru/online/investicii", icon: "invest", color: gradients.purple, cats: ["invest"] },
+            { name: "Газпромбанк Инвестиции", link: "https://gazprombank.investments/", icon: "invest", color: gradients.blue, cats: ["invest", "gazprom"] },
+            { name: "МТС Инвестиции", link: "https://mts.investments/", icon: "invest", color: gradients.red, cats: ["invest"] },
+            { name: "БКС Мир Инвестиций", link: "https://bcs.ru/", icon: "invest", color: gradients.blue, cats: ["invest"] },
+
+            // ПРОДУКТЫ ОТ СБЕРА
+            { name: "ЮMoney", link: "https://yoomoney.ru/", icon: "bank", color: gradients.purple, cats: ["sber"] },
+            { name: "2ГИС", link: "https://2gis.ru/", icon: "map", color: gradients.green, cats: ["sber"] },
+            { name: "OKKO", link: "https://okko.tv/", icon: "video", color: gradients.dark, cats: ["sber"] },
+            { name: "МегаМаркет", link: "https://megamarket.ru/", icon: "shop", color: gradients.red, cats: ["sber", "shopping"] },
+            { name: "Отелло", link: "https://otello.ru/", icon: "ticket", color: gradients.purple, cats: ["sber", "travel"] },
+            { name: "Сбер Бизнес", link: "https://www.sberbank.ru/ru/s_m_business/new_sbbol", icon: "bank", color: gradients.green, cats: ["sber", "business"] },
+            { name: "GigaChat", link: "https://gigachat.devices.sberbank.ru", icon: "ai", color: gradients.purple, cats: ["sber"] },
+            { name: "СберЗвук", link: "https://zvuk.com/", icon: "music", color: gradients.green, cats: ["sber"] },
+            { name: "СберДиск", link: "https://sberdisk.ru/", icon: "cloud", color: gradients.green, cats: ["sber"] },
+            { name: "Салют Jazz", link: "https://salutejazz.ru/calls", icon: "video", color: gradients.green, cats: ["sber", "business"] },
+            { name: "Сбермобайл", link: "https://sbermobile.ru/", icon: "social", color: gradients.green, cats: ["sber"] },
+            { name: "СберАвто", link: "https://sberauto.com/", icon: "car", color: gradients.green, cats: ["sber"] },
+            { name: "СберПраво", link: "https://sberpravo.ru/", icon: "bank", color: gradients.green, cats: ["sber", "business"] },
+            { name: "СберИнкассация", link: "https://encashment.sberbank.ru/", icon: "bank", color: gradients.green, cats: ["sber", "business"] },
+            { name: "СберСтрахование", link: "https://sberbankins.ru/", icon: "shield", color: gradients.green, cats: ["sber", "insurance"] },
+            { name: "СберСпасибо", link: "https://www.sberbank.ru/retail/ru/person/sberspasibo", icon: "ticket", color: gradients.green, cats: ["sber"] },
+            { name: "СберЗдоровье", link: "https://sberhealth.ru/", icon: "health", color: gradients.green, cats: ["sber"] },
+            { name: "Еаптека", link: "https://www.eapteka.ru/", icon: "health", color: gradients.green, cats: ["sber"] },
+            { name: "Афиша", link: "https://www.afisha.ru/", icon: "ticket", color: gradients.purple, cats: ["sber"] },
+            { name: "Домклик", link: "https://domclick.ru/", icon: "bank", color: gradients.green, cats: ["sber"] },
+            { name: "WebQUIK", link: "https://webquik.sberbank.ru/", icon: "invest", color: gradients.green, cats: ["sber"] },
+            { name: "Рамблер Почта", link: "https://mail.rambler.ru/auth", icon: "mail", color: gradients.cyan, cats: ["sber"] },
+            { name: "Рамблер Знакомства", link: "https://m.dating.rambler.ru/", icon: "social", color: gradients.cyan, cats: ["sber", "dating"] },
+            { name: "Рамблер Гороскопы", link: "https://horoscopes.rambler.ru/", icon: "ai", color: gradients.cyan, cats: ["sber"] },
+            { name: "Рамблер Поиск", link: "https://nova.rambler.ru/search", icon: "search", color: gradients.cyan, cats: ["sber"] },
+
+            // ПРОДУКТЫ VK И ИГРЫ
+            { name: "VK Видео", link: "https://m.vkvideo.ru/", icon: "video", color: gradients.blue, cats: ["vk"] },
+            { name: "VK Live", link: "https://live.vkvideo.ru/", icon: "video", color: gradients.blue, cats: ["vk"] },
+            { name: "VK Teams", link: "https://myteam.mail.ru/webim/", icon: "chat", color: gradients.blue, cats: ["vk", "business"] },
+            { name: "VK Звонки", link: "https://vk.cc/cOgDys", icon: "video", color: gradients.blue, cats: ["vk"] },
+            { name: "VK Мессенджер", link: "https://web.vk.me/", icon: "chat", color: gradients.blue, cats: ["vk"] },
+            { name: "VK Почта", link: "https://vk.ru/vkmail/services", icon: "mail", color: gradients.blue, cats: ["vk"] },
+            { name: "VK Знакомства", link: "https://m.vk.ru/dating", icon: "social", color: gradients.blue, cats: ["vk", "dating"] },
+            { name: "ОК знакомства", link: "https://ok.ru/app/dating", icon: "social", color: gradients.orange, cats: ["vk", "dating"] },
+            { name: "VK Play Облако", link: "https://vkplay.ru/play/is_cloud/", icon: "game", color: gradients.purple, cats: ["vk", "games"] },
+            { name: "VK play ру", link: "https://vkplay.ru/play/", icon: "game", color: gradients.purple, cats: ["vk", "games"] },
+            { name: "VK play English", link: "https://vkplay.ru/play/?lang=en_US", icon: "game", color: gradients.purple, cats: ["vk", "games"] },
+            { name: "VK play разработчикам", link: "https://developers.vkplay.ru/dev/developers/register/", icon: "game", color: gradients.purple, cats: ["vk", "games", "business"] },
+            { name: "VK Гороскопы", link: "https://m.vk.ru/app8039446", icon: "ai", color: gradients.purple, cats: ["vk"] },
+            { name: "Дзен", link: "https://dzen.ru", icon: "social", color: gradients.dark, cats: ["vk"] },
+            { name: "Юла", link: "https://youla.ru/", icon: "shop", color: gradients.purple, cats: ["vk", "shopping"] },
+            { name: "Облако mail.ru", link: "https://cloud.mail.ru/", icon: "cloud", color: gradients.blue, cats: ["vk"] },
+            { name: "Мой мир@mail.ru", link: "https://m.my.mail.ru/", icon: "social", color: gradients.blue, cats: ["vk", "social_nets"] },
+            { name: "Ответы mail.ru", link: "https://otvet.mail.ru/", icon: "chat", color: gradients.blue, cats: ["vk"] },
+            { name: "VK HR Tek", link: "https://vkdoc.mail.ru/", icon: "social", color: gradients.blue, cats: ["vk", "business"] },
+            { name: "VK WorkSpace", link: "https://workspace.vk.ru/", icon: "cloud", color: gradients.blue, cats: ["vk", "business"] },
+            { name: "Магия Знаний (от VK)", link: "https://xn--80aaiqechrnb8q.xn--p1ai/", icon: "edu", color: gradients.purple, cats: ["vk"] },
+            { name: "VK видео/ клипы", link: "https://vkvideo.ru/clips", icon: "video", color: gradients.blue, cats: ["vk"] },
+            { name: "VK видео/ детям", link: "https://vkvideo.ru/for_kids", icon: "video", color: gradients.blue, cats: ["vk"] },
+            { name: "VK видео/ кабинет автора", link: "https://vkvideo.ru/dashboard", icon: "video", color: gradients.blue, cats: ["vk", "business"] },
+            { name: "VK видео/ политика", link: "https://vkvideo.ru/politics", icon: "video", color: gradients.blue, cats: ["vk"] },
+            { name: "VK видео/ фильмы и сериалы", link: "https://vkvideo.ru/movies_serials", icon: "video", color: gradients.blue, cats: ["vk"] },
+            { name: "VK видео/ музыка", link: "https://vkvideo.ru/musical", icon: "music", color: gradients.blue, cats: ["vk"] },
+            { name: "VK видео/ шоу", link: "https://vkvideo.ru/tvshow", icon: "video", color: gradients.blue, cats: ["vk"] },
+            { name: "VK видео/ телеканалы", link: "https://vkvideo.ru/tvchannels", icon: "video", color: gradients.blue, cats: ["vk"] },
+            { name: "VK видео/ спорт", link: "https://vkvideo.ru/sport", icon: "sport", color: gradients.blue, cats: ["vk"] },
+            { name: "VK видео/ трансляции", link: "https://vkvideo.ru/lives", icon: "video", color: gradients.blue, cats: ["vk"] },
+            { name: "VK видео/ киберспорт и игры", link: "https://vkvideo.ru/cybersport", icon: "game", color: gradients.blue, cats: ["vk", "games"] },
+            { name: "VK видео/ семья и дети", link: "https://vkvideo.ru/family", icon: "video", color: gradients.blue, cats: ["vk"] },
+            { name: "VK видео/ тренды", link: "https://vkvideo.ru/trends", icon: "video", color: gradients.blue, cats: ["vk"] },
+
+            // БАНКИ
+            { name: "Альфа-Банк", link: "https://alfabank.ru/", icon: "bank", color: gradients.red, cats: ["popular", "banks"] },
+            { name: "Т-Банк", link: "https://www.tinkoff.ru/auth/login/", icon: "bank", color: gradients.yellow, cats: ["popular", "banks"] },
+            { name: "Россельхозбанк", link: "https://online.rshb.ru/", icon: "bank", color: gradients.green, cats: ["popular", "banks"] },
+            { name: "Газпромбанк", link: "https://ib.online.gpb.ru/login", icon: "bank", color: gradients.blue, cats: ["popular", "banks", "gazprom"] },
+            { name: "ВТБ Онлайн", link: "https://online.vtb.ru/login", icon: "bank", color: gradients.blue, cats: ["popular", "banks"] },
+            { name: "Совкомбанк", link: "https://sovcombank.ru/", icon: "bank", color: gradients.yellow, cats: ["banks"] },
+            { name: "Халва", link: "https://halvacard.ru/", icon: "bank", color: gradients.orange, cats: ["banks"] },
+            { name: "МКБ", link: "https://online.mkb.ru/login", icon: "bank", color: gradients.cyan, cats: ["banks"] },
+            { name: "Банк Россия", link: "https://i2.abr.ru/account/login", icon: "bank", color: gradients.blue, cats: ["banks"] },
+            { name: "Альфа-Банк Бизнес", link: "https://id.alfabank.ru/oidc/login/auth", icon: "bank", color: gradients.red, cats: ["banks", "business"] },
+            { name: "Абсолют Банк", link: "https://online.absolutbank.ru/", icon: "bank", color: gradients.orange, cats: ["banks"] },
+            { name: "РосБанк", link: "https://www.bankline.ru/ibc/ru/login", icon: "bank", color: gradients.dark, cats: ["banks"] },
+            { name: "МТС Банк", link: "https://sso.mtsbank.ru/", icon: "bank", color: gradients.red, cats: ["banks"] },
+            { name: "Модульбанк", link: "https://my.modulbank.ru/#/signin", icon: "bank", color: gradients.cyan, cats: ["banks", "business"] },
+            { name: "ВБРР", link: "https://online.vbrr.ru/", icon: "bank", color: gradients.blue, cats: ["banks"] },
+            { name: "Кредит Урал Банк", link: "https://direct.creditural.ru/", icon: "bank", color: gradients.cyan, cats: ["banks"] },
+            { name: "Банк Faktura", link: "https://balance.faktura.ru/", icon: "bank", color: gradients.purple, cats: ["banks"] },
+            { name: "Банк Авангард", link: "https://login.avangard.ru/", icon: "bank", color: gradients.green, cats: ["banks"] },
+            { name: "УБРиР", link: "https://i.ubrr.ru/auth/by-card", icon: "bank", color: gradients.red, cats: ["banks"] },
+            { name: "ПСБ Банк", link: "https://ib2.psbank.ru/login", icon: "bank", color: gradients.blue, cats: ["banks"] },
+            { name: "Русский Стандарт", link: "https://online.rsb.ru/", icon: "bank", color: gradients.red, cats: ["banks"] },
+            { name: "РостФинанс Банк", link: "https://www.rostfinance.ru/internet-bank/", icon: "bank", color: gradients.cyan, cats: ["banks"] },
+            { name: "Хоум Банк", link: "https://my.homebank.ru/auth", icon: "bank", color: gradients.red, cats: ["banks"] },
+            { name: "Челиндбанк", link: "https://www.chelindbank.ru/", icon: "bank", color: gradients.blue, cats: ["banks"] },
+            { name: "ТКБ Банк", link: "https://lk.tkbbank.ru/login/auto-reg", icon: "bank", color: gradients.orange, cats: ["banks"] },
+            { name: "Примсоцбанк", link: "https://psl.pskb.com/", icon: "bank", color: gradients.yellow, cats: ["banks"] },
+            { name: "Новиком Банк", link: "https://online.novikom.ru/", icon: "bank", color: gradients.blue, cats: ["banks"] },
+            { name: "БелИнвест Банк", link: "https://login.belinvestbank.by/", icon: "bank", color: gradients.green, cats: ["banks"] },
+            { name: "Банк Приморье", link: "https://mybank.primbank.ru/", icon: "bank", color: gradients.blue, cats: ["banks"] },
+            { name: "Банк Санкт-Петербург", link: "https://i.bspb.ru/", icon: "bank", color: gradients.red, cats: ["banks"] },
+            { name: "Быстро Банк", link: "https://www.bystrobank.ru/", icon: "bank", color: gradients.orange, cats: ["banks"] },
+            { name: "Ак Барс Банк", link: "https://www.akbars.ru/", icon: "bank", color: gradients.green, cats: ["banks"] },
+            { name: "РНКББанк", link: "https://www.rncb.ru/", icon: "bank", color: gradients.blue, cats: ["banks"] },
+            { name: "ДОМ.РФ", link: "https://domrfbank.ru/", icon: "bank", color: gradients.green, cats: ["banks"] },
+            { name: "Локо-Банк", link: "https://www.lockobank.ru/", icon: "bank", color: gradients.blue, cats: ["banks"] },
+            { name: "БКС Банк", link: "https://bcs-bank.com/", icon: "bank", color: gradients.blue, cats: ["banks"] },
+            { name: "Датабанк", link: "https://databank.ru/", icon: "bank", color: gradients.cyan, cats: ["banks"] },
+            { name: "Международный финансовый клуб", link: "https://www.mfk-bank.ru/", icon: "bank", color: gradients.dark, cats: ["banks"] },
+            { name: "Синара Банк", link: "https://sinara.ru/chastnym-licam", icon: "bank", color: gradients.red, cats: ["banks"] },
+            { name: "Точка Банк", link: "https://tochka.com/", icon: "bank", color: gradients.purple, cats: ["banks", "business"] },
+            { name: "Транскапиталбанк", link: "https://www.tkbbank.ru/", icon: "bank", color: gradients.orange, cats: ["banks"] },
+            { name: "Инвестторгбанк", link: "https://www.itb.ru/", icon: "bank", color: gradients.red, cats: ["banks"] },
+            { name: "Челябинскинвестбанк", link: "https://chelinvest.ru/about/", icon: "bank", color: gradients.green, cats: ["banks"] },
+            { name: "Металлинвестбанк", link: "https://www.metallinvestbank.ru/", icon: "bank", color: gradients.blue, cats: ["banks"] },
+            { name: "Дальневосточный банк", link: "https://www.dvbank.ru/", icon: "bank", color: gradients.blue, cats: ["banks"] },
+            { name: "ПСБ Бизнес", link: "https://business.psbank.ru/", icon: "bank", color: gradients.blue, cats: ["banks", "business"] },
+            { name: "Мой Бизнес (ПСБПСБ Корпоративный)", link: "https://business.psbank.ru/", icon: "bank", color: gradients.orange, cats: ["banks", "business"] },
+            { name: "Совкомбанк Бизнес", link: "https://sovcombank.ru/business", icon: "bank", color: gradients.blue, cats: ["banks", "business"] },
+            { name: "Открытие бизнес", link: "https://otkrytie-bank.ru/biznes-online/", icon: "bank", color: gradients.cyan, cats: ["banks", "business"] },
+            { name: "Россельхозбанк Бизнес", link: "https://next.rshb.ru/login", icon: "bank", color: gradients.green, cats: ["banks", "business"] },
+            { name: "Росбанк Бизнес", link: "https://www.rosbank.ru/", icon: "bank", color: gradients.red, cats: ["banks", "business"] },
+            { name: "МКБ Бизнес", link: "https://my.mkb-am.ru/", icon: "bank", color: gradients.red, cats: ["banks", "business"] },
+            { name: "Уралсиб Бизнес", link: "https://dbo.uralsib.ru/account/login", icon: "bank", color: gradients.purple, cats: ["banks", "business"] },
+            { name: "Генбанк Онлайн", link: "https://online.genbank.ru/client/login", icon: "bank", color: gradients.orange, cats: ["banks"] },
+
+            // ПРОДУКТЫ ГАЗПРОМА
+            { name: "Rutube", link: "https://rutube.ru", icon: "video", color: gradients.dark, cats: ["gazprom"] },
+            { name: "Rutube Studio", link: "https://studio.rutube.ru/login", icon: "video", color: gradients.dark, cats: ["gazprom", "business"] },
+            { name: "Premier", link: "https://premier.one/", icon: "video", color: gradients.purple, cats: ["gazprom"] },
+            { name: "Матч ТВ", link: "https://matchtv.ru/", icon: "sport", color: gradients.red, cats: ["gazprom", "media"] },
+            { name: "НТВ", link: "https://www.ntv.ru/air/ntv/", icon: "video", color: gradients.green, cats: ["gazprom", "media"] },
+            { name: "НТВ-Плюс", link: "https://ntvplus.tv/", icon: "video", color: gradients.green, cats: ["gazprom", "media"] },
+            { name: "НТВ-Плюс Личный кабинет", link: "https://service.ntvplus.ru/", icon: "video", color: gradients.green, cats: ["gazprom"] },
+
+            // ВГТРК
+            { name: "Россия 1", link: "https://vgtrk.ru/russiatv", icon: "video", color: gradients.blue, cats: ["vgtrk", "media"] },
+            { name: "Россия РТР", link: "https://vgtrk.ru/rtrplaneta", icon: "video", color: gradients.blue, cats: ["vgtrk", "media"] },
+            { name: "Россия К (Росссия Культура ТВ канал)", link: "https://vgtrk.ru/tvkultura", icon: "video", color: gradients.purple, cats: ["vgtrk", "media"] },
+            { name: "Россия 24", link: "https://vgtrk.ru/russia24", icon: "news", color: gradients.blue, cats: ["vgtrk", "media"] },
+            { name: "Карусель ТВ", link: "https://www.karusel-tv.ru/", icon: "video", color: gradients.yellow, meta: "совместный проект ВГТРК и Первого канала", cats: ["vgtrk", "media"] },
+            { name: "Радио Маяк", link: "https://vgtrk.ru/radiomayak", icon: "radio", color: gradients.red, cats: ["vgtrk", "radio"] },
+            { name: "Радио России", link: "https://vgtrk.ru/radiorus", icon: "radio", color: gradients.blue, cats: ["vgtrk", "radio"] },
+            { name: "Радио Юность", link: "https://vgtrk.ru/radiounost", icon: "radio", color: gradients.orange, cats: ["vgtrk", "radio"] },
+            { name: "Вести FM", link: "https://vgtrk.ru/radiovesti", icon: "radio", color: gradients.blue, cats: ["vgtrk", "radio"] },
+            { name: "Радио Культура", link: "https://vgtrk.ru/cultradio", icon: "radio", color: gradients.purple, cats: ["vgtrk", "radio"] },
+            { name: "Вести.ру/Вести.ru", link: "https://www.vesti.ru/", icon: "news", color: gradients.blue, cats: ["vgtrk", "media"] },
+            { name: "Вести.ru", link: "https://www.vesti.ru/", icon: "news", color: gradients.blue, cats: ["vgtrk", "media"] },
+
+            // СМИ, РАДИО И СМИ НА АНГЛИЙСКОМ
+            { name: "Первый канал", link: "https://www.1tv.ru/", icon: "video", color: gradients.blue, cats: ["media"] },
+            { name: "RT News", link: "https://www.rt.com/", icon: "news", color: gradients.green, cats: ["media", "media_en"] },
+            { name: "RT News на русском", link: "https://russian.rt.com/", icon: "news", color: gradients.green, cats: ["media"] },
+            { name: "RT Arabic", link: "https://rtarabic.ru/", icon: "news", color: gradients.green, cats: ["media"] },
+            { name: "RT en Español", link: "https://actualidad-rt.com/", icon: "news", color: gradients.green, cats: ["media"] },
+            { name: "RT France", link: "https://rtfrance.tv/en-direct", icon: "news", color: gradients.green, cats: ["media"] },
+            { name: "RT UK", link: "https://www.rt.com/on-air/rt-uk-air/", icon: "news", color: gradients.green, cats: ["media", "media_en"] },
+            { name: "RT Doc", link: "https://en.rtdoc.tv/", icon: "video", color: gradients.dark, cats: ["media", "media_en"] },
+            { name: "RT Doc на русском", link: "https://rtdoc.tv/", icon: "video", color: gradients.dark, cats: ["media"] },
+            { name: "RT DE", link: "https://de-rt.com/", icon: "news", color: gradients.green, cats: ["media"] },
+            { name: "RT Balkan", link: "https://rt.rs/", icon: "news", color: gradients.green, cats: ["media"] },
+            { name: "RT India", link: "https://www.rt.com/india/", icon: "news", color: gradients.green, cats: ["media", "media_en"] },
+            { name: "RT Doc Hindi", link: "https://en.rtdoc.tv/selection/hindi", icon: "video", color: gradients.dark, cats: ["media"] },
+            { name: "Sputnik News", link: "https://sputnikglobe.com/", icon: "news", color: gradients.orange, cats: ["media", "media_en"] },
+            { name: "Sputnik News на русском", link: "https://radiosputnik.ru/lenta/", icon: "news", color: gradients.orange, cats: ["media"] },
+            { name: "Sputnik News Arabic", link: "https://sarabic.ae/", icon: "news", color: gradients.orange, cats: ["media"] },
+            { name: "Sputnik News China", link: "https://big5.sputniknews.cn/news/", icon: "news", color: gradients.orange, cats: ["media"] },
+            { name: "Sputnik News Радио (на русском)", link: "https://radiosputnik.ru/", icon: "radio", color: gradients.orange, cats: ["media", "radio"] },
+            { name: "Звезда (Телеканал)", link: "https://tvzvezda.ru/", icon: "video", color: gradients.red, cats: ["media"] },
+            { name: "Звезда Плюс (Телеканал)", link: "https://tvzvezda.ru/sp/zvezda-plus/", icon: "video", color: gradients.red, cats: ["media"] },
+            { name: "Радио «Звезда»", link: "https://radiozvezda.ru/", icon: "radio", color: gradients.red, cats: ["media", "radio"] },
+            { name: "IZвестия", link: "https://iz.ru/", icon: "news", color: gradients.dark, cats: ["media"] },
+            { name: "IZвестия на английском", link: "https://en.iz.ru/", icon: "news", color: gradients.dark, cats: ["media", "media_en"] },
+            { name: "РИА Новости", link: "https://ria.ru/", icon: "news", color: gradients.blue, cats: ["media"] },
+            { name: "Газета.ru (Газета.ру)", link: "https://www.gazeta.ru/", icon: "news", color: gradients.red, cats: ["media"] },
+            { name: "Лента.ru (Лента.ру)", link: "https://lenta.ru/", icon: "news", color: gradients.dark, cats: ["media"] },
+            { name: "Взгляд (новости)", link: "https://vz.ru/", icon: "news", color: gradients.red, cats: ["media"] },
+            { name: "Соловьёв Live", link: "https://soloviev.live/", icon: "video", color: gradients.red, cats: ["media"] },
+            { name: "Царьград новости", link: "https://tsargrad.tv/", icon: "news", color: gradients.red, cats: ["media"] },
+            { name: "Царьград ТВ (эфир)", link: "https://ural.tsargrad.tv/shows/rubric/last", icon: "video", color: gradients.red, cats: ["media"] },
+            { name: "Комсомольская правда", link: "https://www.kp.ru/", icon: "news", color: gradients.orange, cats: ["media"] },
+            { name: "Комсомольская правда на английском", link: "https://www.kp.ru/daily/rubric/english/", icon: "news", color: gradients.orange, cats: ["media", "media_en"] },
+            { name: "РЕН ТВ прямой эфир", link: "https://ren.tv/live", icon: "video", color: gradients.orange, cats: ["media"] },
+            { name: "РЕН ТВ программа передач", link: "https://ren.tv/tv-program", icon: "video", color: gradients.orange, cats: ["media"] },
+            { name: "РЕН ТВ новости", link: "https://ren.tv/tag/novosti-ren-tv", icon: "news", color: gradients.orange, cats: ["media"] },
+            { name: "Пятый канал", link: "https://www.5-tv.ru/live/", icon: "video", color: gradients.red, cats: ["media"] },
+            { name: "Пятый канал новости", link: "https://www.5-tv.ru/", icon: "news", color: gradients.red, cats: ["media"] },
+            { name: "ЛЕН ТВ 24", link: "https://lentv24.ru/", icon: "video", color: gradients.cyan, cats: ["media"] },
+            { name: "ЛЕН ТВ Новости", link: "https://lentv24.ru/Novosti.htm", icon: "news", color: gradients.cyan, cats: ["media"] },
+            { name: "ТВ Центр (ТВЦ)", link: "https://www.tvc.ru/", icon: "video", color: gradients.red, cats: ["media"] },
+            { name: "ТВ Центр (ТВЦ) прямой эфир", link: "https://www.tvc.ru/live", icon: "video", color: gradients.red, cats: ["media"] },
+            { name: "ТВ Центр (ТВЦ) телепрограмма", link: "https://www.tvc.ru/tvp", icon: "video", color: gradients.red, cats: ["media"] },
+            { name: "ТВ Центр (ТВЦ) видеотека", link: "https://www.tvc.ru/videos", icon: "video", color: gradients.red, cats: ["media"] },
+            { name: "ТВ Центр (ТВЦ) новости", link: "https://www.tvc.ru/news", icon: "news", color: gradients.red, cats: ["media"] },
+            { name: "Настроение ТВ (от ТВЦ)", link: "https://nastroenie.tv/", icon: "video", color: gradients.orange, cats: ["media"] },
+            { name: "Настроение (ТВЦ) астропрогноз", link: "https://nastroenie.tv/", icon: "ai", color: gradients.purple, cats: ["media"] },
+            { name: "Спас ТВ", link: "https://spastv.ru/", icon: "video", color: gradients.yellow, cats: ["media"] },
+            { name: "ИноСМИ", link: "https://inosmi.ru/", icon: "news", color: gradients.blue, cats: ["media"] },
+            { name: "ИноБлоги", link: "https://inosmi.ru/inoblog/", icon: "chat", color: gradients.blue, cats: ["media"] },
+            { name: "Украина.ру", link: "https://ukraina.ru/", icon: "news", color: gradients.blue, cats: ["media"] },
+            { name: "Украина.ру радио", link: "https://ukraina.ru/category_radio-novorossiya-segodnya/", icon: "radio", color: gradients.blue, cats: ["media", "radio"] },
+            { name: "Baltnews", link: "https://baltnews.com/", icon: "news", color: gradients.blue, cats: ["media"] },
+            { name: "Парламентская газета", link: "https://www.pnp.ru/", icon: "news", color: gradients.blue, cats: ["media"] },
+
+            // ПУТЕШЕСТВИЯ (Авиа, Ж/Д, Автотранспорт)
+            { name: "Аэрофлот", link: "https://www.aeroflot.ru/", icon: "plane", color: gradients.blue, cats: ["travel"] },
+            { name: "Аэрофлот на английском", link: "https://www.aeroflot.ru/en", icon: "plane", color: gradients.blue, cats: ["travel"] },
+            { name: "Аэрофлот на русском", link: "https://www.aeroflot.ru/?lang=en", icon: "plane", color: gradients.blue, cats: ["travel"] },
+            { name: "Аэрофлот Бонус", link: "https://www.aeroflot.ru/aeroflot-bonus/", icon: "plane", color: gradients.blue, cats: ["travel"] },
+            { name: "РЖД Пассажирам", link: "https://www.rzd.ru/", icon: "ticket", color: gradients.red, cats: ["travel"] },
+            { name: "РЖД Бонус", link: "https://rzd-bonus.ru/", icon: "ticket", color: gradients.red, cats: ["travel"] },
+            { name: "Стрелка", link: "https://strelkacard.ru/#/login", icon: "car", color: gradients.green, cats: ["travel"] },
+            { name: "Автодор", link: "https://avtodor-tr.ru/", icon: "car", color: gradients.blue, cats: ["travel"] },
+            { name: "Мострансавто", link: "https://mostransavto.ru/", icon: "car", color: gradients.yellow, cats: ["travel"] },
+            { name: "Россия (Авиакомпания)", link: "https://www.rossiya-airlines.ru/", icon: "plane", color: gradients.red, cats: ["travel"] },
+            { name: "Уральские авиалини", link: "https://www.uralairlines.ru/", icon: "plane", color: gradients.red, cats: ["travel"] },
+            { name: "Utair", link: "https://trip.utair.ru/?direction=from", icon: "plane", color: gradients.blue, cats: ["travel"] },
+            { name: "Победа", link: "https://www.flypobeda.ru/", icon: "plane", color: gradients.cyan, cats: ["travel"] },
+            { name: "Red Wings (авиабилеты)", link: "https://flyredwings.com/", icon: "plane", color: gradients.red, cats: ["travel"] },
+            { name: "Аврора (Авиакомпания)", link: "https://www.aurora-airlines.ru/", icon: "plane", color: gradients.blue, cats: ["travel"] },
+            { name: "Алроса (Авиакомпания)", link: "https://aero.alrosa.ru/", icon: "plane", color: gradients.blue, cats: ["travel"] },
+            { name: "Ижавиа (Авиакомпания)", link: "https://izhavia.su/", icon: "plane", color: gradients.red, cats: ["travel"] },
+            { name: "Северсталь Авиа", link: "https://severstal-avia.ru/", icon: "plane", color: gradients.blue, cats: ["travel"] },
+            { name: "РусЛайн", link: "https://www.rusline.aero/", icon: "plane", color: gradients.red, cats: ["travel"] },
+            { name: "Якутия Авиа", link: "https://www.yakutia.aero/", icon: "plane", color: gradients.cyan, cats: ["travel"] },
+            { name: "Газпром Авиа", link: "https://avia.gazprom.ru/", icon: "plane", color: gradients.blue, cats: ["travel", "gazprom"] },
+            { name: "Азимут Авиа", link: "https://azimuth.ru/ru", icon: "plane", color: gradients.orange, cats: ["travel"] },
+            { name: "Красавиа", link: "https://www.krasavia.ru/", icon: "plane", color: gradients.blue, cats: ["travel"] },
+            { name: "Чукотавиа", link: "https://chukotavia.ru/", icon: "plane", color: gradients.cyan, cats: ["travel"] },
+            { name: "Полярные авиалинии", link: "https://polar-aero.ru/", icon: "plane", color: gradients.blue, cats: ["travel"] },
+            { name: "Вологодское авиапредприятие", link: "https://avia35.ru/", icon: "plane", color: gradients.red, cats: ["travel"] },
+
+            // ПОКУПКИ, СТРАХОВАНИЕ, СОЦСЕТИ, БИЗНЕС И ОСТАЛЬНЫЕ
+            { name: "Авито", link: "https://avito.ru", icon: "shop", color: gradients.green, cats: ["shopping"] },
+            { name: "Привет!", link: "https://vamprivet.ru/", icon: "ticket", color: gradients.orange, cats: ["other"] },
+            { name: "Лента Онлайн", link: "https://lenta.com/", icon: "shop", color: gradients.yellow, cats: ["shopping"] },
+            { name: "Skillbox", link: "https://skillbox.ru/", icon: "edu", color: gradients.dark, cats: ["other"] },
+            { name: "Живой журнал", link: "https://www.livejournal.com/", icon: "chat", color: gradients.cyan, cats: ["social_nets"] },
+            { name: "Совкомбанк Страхование", link: "https://sovcomins.ru/", icon: "shield", color: gradients.blue, cats: ["insurance"] },
+            { name: "ВТБ Страхование", link: "https://www.vtb.ru/personal/drugie-uslugi/strahovye-i-servisnye-produkty/", icon: "shield", color: gradients.blue, cats: ["insurance"] },
+            { name: "Альфа-Страхование", link: "https://www.alfastrah.ru/", icon: "shield", color: gradients.red, cats: ["insurance"] },
+            { name: "Росгосстрах Жизнь", link: "https://rgsl.ru/", icon: "shield", color: gradients.red, cats: ["insurance"] },
+            { name: "Свой Круг (МТС)", link: "https://business.mts.ru/moskva/svoj-krug-polzovatelyam", icon: "social", color: gradients.red, cats: ["business"] },
+            { name: "Народный Фронт", link: "https://onf.ru/", icon: "social", color: gradients.red, cats: ["other"] },
+
+            // ИНОСТРАННЫЕ
+            { name: "Google Gemini", link: "https://gemini.google.com/", icon: "ai", color: gradients.purple, isForeign: true, cats: ["foreign"] },
+            { name: "ChatGPT", link: "https://chatgpt.com/", icon: "ai", color: gradients.green, isForeign: true, cats: ["foreign"] },
+            { name: "Claude", link: "https://claude.com/", icon: "ai", color: gradients.orange, isForeign: true, cats: ["foreign"] },
+            { name: "Spotify", link: "https://www.spotify.com/int/why-not-available/", icon: "music", color: gradients.green, isForeign: true, cats: ["foreign"] },
+            { name: "Deezer", link: "https://www.deezer.com/", icon: "music", color: gradients.purple, isForeign: true, cats: ["foreign"] },
+            { name: "Nike", link: "https://www.nike.com/be/en/", icon: "shop", color: gradients.dark, isForeign: true, cats: ["foreign"] },
+            { name: "Adidas", link: "https://www.adidas.com/us", icon: "shop", color: gradients.dark, isForeign: true, cats: ["foreign"] },
+            { name: "IKEA", link: "https://www.ikea.com/", icon: "furniture", color: gradients.yellow, isForeign: true, cats: ["foreign"] },
+            { name: "McDonald's", link: "https://www.mcdonalds.com/us/en-us.html", icon: "fastfood", color: gradients.red, isForeign: true, cats: ["foreign"] },
+            { name: "Netflix", link: "https://app.netflix.com/signup", icon: "video", color: gradients.red, isForeign: true, cats: ["foreign"] },
+            { name: "Starbucks", link: "https://www.starbucks.com.kz/ru/menu", icon: "coffee", color: gradients.green, isForeign: true, cats: ["foreign"] },
+            { name: "CocaCola", link: "https://www.coca-colacompany.com/", icon: "can", color: gradients.red, isForeign: true, cats: ["foreign"] },
+            { name: "WWE", link: "https://www.wwe.com/", icon: "sport", color: gradients.dark, isForeign: true, cats: ["foreign"] },
+            { name: "НБА", link: "https://www.nba.com/", icon: "sport", color: gradients.blue, isForeign: true, cats: ["foreign"] },
+            { name: "НХЛ", link: "https://www.nhl.com/", icon: "sport", color: gradients.dark, isForeign: true, cats: ["foreign"] }
+        ];
+
+        function createCard(app) {
+            const card = document.createElement('a');
+            card.href = app.link;
+            card.target = "_blank";
+            card.rel = "noopener noreferrer";
+            card.className = "card";
+            card.dataset.name = app.name.toLowerCase();
+
+            let metaText = app.meta ? app.meta : (app.isForeign ? "иностранный сервис" : "");
+            let svgPath = icons[app.icon] || icons['social']; 
+
+            card.innerHTML = `
+                <div class="app-icon" style="background: ${app.color}">
+                    <svg viewBox="0 0 24 24">${svgPath}</svg>
+                </div>
+                <h3 class="app-name">${app.name}</h3>
+                <p class="app-meta">${metaText}</p>
+                <div class="btn-open">Открыть</div>
+            `;
+            return card;
+        }
+
+        const catalogContainer = document.getElementById('catalogContainer');
+        
+        categoriesConfig.forEach(cat => {
+            const appsInCat = appsData.filter(app => app.cats.includes(cat.id));
+            
+            if (appsInCat.length > 0) {
+                const section = document.createElement('div');
+                section.className = 'category-section';
+                section.id = `section-${cat.id}`;
+                
+                const headerWrap = document.createElement('div');
+                headerWrap.className = 'category-header';
+
+                const title = document.createElement('h2');
+                title.className = 'category-title';
+                title.textContent = cat.title;
+                headerWrap.appendChild(title);
+
+                if (cat.note) {
+                    const note = document.createElement('span');
+                    note.className = 'category-note';
+                    note.textContent = `(${cat.note})`;
+                    headerWrap.appendChild(note);
+                }
+                
+                const grid = document.createElement('div');
+                grid.className = 'grid';
+                
+                appsInCat.forEach(app => grid.appendChild(createCard(app)));
+                
+                section.appendChild(headerWrap);
+                section.appendChild(grid);
+                catalogContainer.appendChild(section);
+            }
+        });
+
+        // Логика локального поиска
+        const searchInput = document.getElementById('searchInput');
+        const noResults = document.getElementById('noResults');
+
+        searchInput.addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase().trim();
+            let hasAnyVisible = false;
+
+            document.querySelectorAll('.category-section').forEach(section => {
+                let sectionHasVisible = false;
+                const cards = section.querySelectorAll('.card');
+                
+                cards.forEach(card => {
+                    if (card.dataset.name.includes(query)) {
+                        card.style.display = 'flex';
+                        sectionHasVisible = true;
+                        hasAnyVisible = true;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                section.style.display = sectionHasVisible ? 'block' : 'none';
+            });
+
+            noResults.style.display = hasAnyVisible ? 'none' : 'block';
+        });
+    </script>
+</body>
+</html>
